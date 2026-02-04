@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "http://localhost:5000/api",
+  baseURL: "https://charming-peace-production-395a.up.railway.app/api",
 });
 
 // 🔐 Auto attach token
