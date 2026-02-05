@@ -1,17 +1,16 @@
 import axios from "axios";
 
-// 🔹 Local backend (development)
-const LOCAL_API = "http://localhost:5000";
+const API = axios.create({
+  baseURL: "https://charming-peace-production-395a.up.railway.app/api",
+});
 
-// 🔹 Production backend (Render)
-const PROD_API = "https://bi-rating-calculator.onrender.com";
+// token attach
+API.interceptors.request.use((config) => {
+  const token = localStorage.getItem("token");
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
 
-// 🔹 Auto select
-const API_BASE_URL =
-  import.meta.env.MODE === "development"
-    ? LOCAL_API
-    : PROD_API;
-
-export const submitLead = (data) => {
-  return axios.post(`${API_BASE_URL}/api/leads`, data);
-};
+export default API; // 🔥 MOST IMPORTANT LINE
