@@ -7,6 +7,16 @@ const orderSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
+    
+    // ✅ NEW: Shipping Details added
+    shippingInfo: {
+      address: { type: String, required: true },
+      city: { type: String, required: true },
+      postalCode: { type: String, required: true },
+      country: { type: String, required: true },
+      phone: { type: String, required: true },
+      email: { type: String, required: true }, // Contact email for this order
+    },
 
     items: [
       {

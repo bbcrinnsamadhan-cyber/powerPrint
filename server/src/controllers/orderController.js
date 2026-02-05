@@ -1,40 +1,46 @@
 import Order from "../models/Order.js";
 import User from "../models/User.js";
 
-//  Place Order (COD)
+// 📦 Place Order (Updated with Shipping Info)
 export const placeOrder = async (req, res) => {
   try {
-    const user = await User.findById(req.user._id).populate("cart.product");
+    // Frontend se shipping details nikalo
+    const { shippingInfo } = req.body; 
 
-    if (!user.cart || user.cart.length === 0) {
-      return res.status(400).json({
-        success: false,
-        message: "Cart is empty",
+    // Validation: Agar details missing hain toh error do
+    if (!shippingInfo || !shippingInfo.address || !shippingInfo.phone || !shippingInfo.city) {
+      return res.status(400).json({ 
+        success: false, 
+        message: "Please provide full shipping address and phone number" 
       });
     }
 
-    //  Total amount calculate
-    let totalAmount = 0;
+    const user = await User.findById(req.user._id).populate("cart.product");
 
+    if (!user.cart || user.cart.length === 0) {
+      return res.status(400).json({ success: false, message: "Cart is empty" });
+    }
+
+    let totalAmount = 0;
     const items = user.cart.map((item) => {
       totalAmount += item.product.price * item.quantity;
-
       return {
         product: item.product._id,
         quantity: item.quantity,
       };
     });
 
-    //  Create order
+    // Create Order with Shipping Info
     const order = await Order.create({
       user: user._id,
       items,
       totalAmount,
+      shippingInfo, // ✅ Saving Address Here
       paymentMethod: "COD",
       status: "Placed",
     });
 
-    //  Clear cart after order
+    // Clear Cart
     user.cart = [];
     await user.save();
 
@@ -44,12 +50,11 @@ export const placeOrder = async (req, res) => {
       order,
     });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: "Order placement failed",
-    });
+    console.error(error);
+    res.status(500).json({ success: false, message: "Order placement failed" });
   }
 };
+// ... getOrderHistory same rahega
 
 
 //  User order history
