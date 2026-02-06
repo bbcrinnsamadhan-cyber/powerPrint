@@ -137,18 +137,7 @@ const MyOrders = () => {
                   </div>
                 </div>
 
-                {/* Order Footer / Actions */}
-                <div className="px-6 py-4 bg-gray-50 border-t border-gray-100 flex justify-end gap-3">
-                   <button className="text-sm text-blue-600 font-semibold hover:underline">
-                     Download Invoice
-                   </button>
-                   {/* Agar status delivered ho toh review button dikha sakte ho */}
-                   {order.status === "Delivered" && (
-                     <button className="text-sm bg-gray-900 text-white px-4 py-2 rounded-lg hover:bg-gray-800">
-                       Write a Review
-                     </button>
-                   )}
-                </div>
+                
 
               </div>
             ))}
